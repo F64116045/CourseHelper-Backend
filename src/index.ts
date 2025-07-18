@@ -24,10 +24,14 @@ app.use('/api/auth', authRoutes);
 app.use('/api/timetable', timetableRoutes);
 
 const startServer = async () => {
-  await connectDB();
-  app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-  });
+  try {
+    await connectDB();
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
+  } catch (error) {
+    console.error("Failed to connect to DB", error);
+  }
 };
 
 startServer();
