@@ -6,23 +6,23 @@ import mongoose, {Schema, Document, Types} from 'mongoose';
     {
       "time": "08:00 - 09:00",
       "classes": [
-        { "name": "英文", "color": "#FFAABB" },
-        { "name": "數學", "color": "#66CCFF" },
-        { "name": "歷史", "color": "#00FF88" },
-        { "name": "理化" },
-        { "name": "體育" }
+        { "className": "英文", "color": "#FFAABB" },
+        { "className": "數學", "color": "#66CCFF" },
+        { "className": "歷史", "color": "#00FF88" },
+        { "className": "理化" },
+        { "className": "體育" }
       ]
     }
   ]
 }
 */
 export interface IClassItem {
-    name: string;
+    className: string;
     color?: string;
 }
 
 const ClassItemSchema = new Schema<IClassItem>({
-    name: { type: String, required: true },
+    className: { type: String, required: true },
     color: { type: String, required: false },
 });
 
