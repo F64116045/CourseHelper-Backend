@@ -1,31 +1,39 @@
 import mongoose, {Schema, Document, Types} from 'mongoose';
 /*
-資料範例
 {
-  columns: ["週一", "週二", "週三", "週四", "週五"],
-  rows: [
+  "columns": ["週一", "週二", "週三", "週四", "週五"],
+  "rows": [
     {
-      time: "08:00 - 09:00",
-      classes: ["英文", "數學", "歷史", "理化", "體育"]
+      "time": "08:00 - 09:00",
+      "classes": [
+        { "name": "英文", "color": "#FFAABB" },
+        { "name": "數學", "color": "#66CCFF" },
+        { "name": "歷史", "color": "#00FF88" },
+        { "name": "理化" },
+        { "name": "體育" }
+      ]
     }
   ]
 }
 */
-export interface ITimetableRows extends Document{
+export interface IClassItem {
+    name: string;
+    color?: string;
+}
+
+const ClassItemSchema = new Schema<IClassItem>({
+    name: { type: String, required: true },
+    color: { type: String, required: false },
+});
+
+export interface ITimetableRows extends Document {
     time: string;
-    classes: string[];
-};
+    classes: IClassItem[];
+}
 
-const TimetableRowsSchema: Schema = new Schema<ITimetableRows>({
-    time:{
-        type:String,
-        required:true,
-    },
-
-    classes:{
-        type:[String],
-        required:true,
-    },
+const TimetableRowsSchema = new Schema<ITimetableRows>({
+    time: { type: String, required: true },
+    classes: { type: [ClassItemSchema], required: true },
 });
 
 const TimetableRows = mongoose.model<ITimetableRows>('TimetableRows', TimetableRowsSchema);
