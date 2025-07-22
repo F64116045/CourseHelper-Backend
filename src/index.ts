@@ -12,7 +12,9 @@ const cors = require('cors');
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: 'https://course-project-eight-omega.vercel.app' , credentials: true, }));
+const allowedOrigins =['http://127.0.0.1:5173', 'https://course-project-eight-omega.vercel.app'];
+app.use(cors({ origin:  allowedOrigins,
+                        credentials: true, }));
 
 
 app.get('/', (req, res) => {
