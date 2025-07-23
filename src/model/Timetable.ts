@@ -26,6 +26,8 @@ const ClassItemSchema = new Schema<IClassItem>({
     color: { type: String, required: false },
 });
 
+export const ClassItem = mongoose.model<IClassItem> ('ClassItem', ClassItemSchema);
+
 export interface ITimetableRows extends Document {
     time: string;
     classes: IClassItem[];
@@ -58,7 +60,4 @@ const TimetableDataSchema: Schema = new Schema<ITimetableData>({
     },
 });
 
-const TimetableData = mongoose.model<ITimetableData>('TimetableData', TimetableDataSchema);
-
-
-export default TimetableData;
+export const TimetableData = mongoose.model<ITimetableData>('TimetableData', TimetableDataSchema);

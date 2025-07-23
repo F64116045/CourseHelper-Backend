@@ -1,11 +1,12 @@
 import {Request, Response} from 'express';
-import TimetableData from '../model/Timetable';
+import {TimetableData} from '../model/Timetable';
 import { mockTimetable } from '../data/mockTimetable';
 
 export const getTimetable = async(req: Request, res: Response)=>{
     try{
         const userId = req.user.userId;
-        console.log(`${userId}嘗試獲取timetable資料`);
+        console.log('Import module:', require('../model/Timetable'));
+        console.log(`${userId}嘗試獲取timetable資料`, TimetableData);
         let timetable = await TimetableData.findOne({userId});
 
         if(!timetable){
