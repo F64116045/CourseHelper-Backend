@@ -26,25 +26,37 @@ export const getTimetable = async(req: Request, res: Response)=>{
 }
 
 
-export const updateTimetable = async (req: Request, res: Response) =>{
-    try{
+export const updateTimetable = async (req: Request, res: Response) => {
+    try {
+        if (!req.user || !req.user.userId) {
+            return res.status(401).json({ message: '使用者未授權' });
+        }
+
         const userId = req.user.userId;
         const { columns, rows } = req.body;
 
-        console.log('shit, 有人在更新課表');
+        
 
         const timetable = await TimetableData.findOneAndUpdate(
             { userId },
-            { columns, rows},
-            { new : true},
+            { columns, rows },
+            { new: true }
         );
+
+        console.log('有人在更新課表:', timetable);
 
         if (!timetable) {
             return res.status(404).json({ message: '找不到課表，無法更新' });
         }
-        
-        res.json({message: '課表更新成功', timetable});
-    }catch(err){
 
+        return res.status(200).json({ message: '課表更新成功' });
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            console.error('後端更新課表錯誤:', err.message);
+            res.status(500).json({ message: '伺服器錯誤', error: err.message });
+        } else {
+            console.error('後端更新課表錯誤:', err);
+            res.status(500).json({ message: '伺服器錯誤', error: String(err) });
+        }
     }
-}
+};

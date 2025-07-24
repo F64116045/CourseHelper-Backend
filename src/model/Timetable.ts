@@ -17,16 +17,13 @@ import mongoose, {Schema, Document, Types} from 'mongoose';
 }
 */
 export interface IClassItem {
-    className: string;
-    color?: string;
+  courseId: Types.ObjectId; // 對應 Course
 }
 
 const ClassItemSchema = new Schema<IClassItem>({
-    className: { type: String, required: true },
-    color: { type: String, required: false },
+  courseId: { type: Schema.Types.ObjectId, ref: 'Course', required: false },
 });
 
-export const ClassItem = mongoose.model<IClassItem> ('ClassItem', ClassItemSchema);
 
 export interface ITimetableRows extends Document {
     time: string;
