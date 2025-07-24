@@ -80,7 +80,7 @@ export const deleteCourse = async(req: Request, res: Response) => {
             await timetable.save();
         }
 
-
+        res.status(200).json({message: '刪除成功'});
     }catch(err){
         console.error('deleteCourse error', err);
         res.status(500).json({ message: 'Server Error: deleteCourse'});
