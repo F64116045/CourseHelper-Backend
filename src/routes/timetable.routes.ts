@@ -10,6 +10,6 @@ router.put('/', authMiddleware, updateTimetable);
 //CourseList
 router.get('/course-list', authMiddleware, getCourseList);
 router.post('/course-list', authMiddleware, createCourse);
-router.delete('/course-list', authMiddleware, deleteCourse);
+router.delete('/course-list/:id', authMiddleware, deleteCourse);
 
 export default router;
