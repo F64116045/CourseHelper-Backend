@@ -17,7 +17,7 @@ import mongoose, {Schema, Document, Types} from 'mongoose';
 }
 */
 export interface IClassItem {
-  courseId: Types.ObjectId; // 對應 Course
+  courseId?: Types.ObjectId | null; // 對應 Course
 }
 
 const ClassItemSchema = new Schema<IClassItem>({
