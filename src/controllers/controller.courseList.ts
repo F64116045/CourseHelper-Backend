@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import { TimetableData, IClassItem, ITimetableData} from '../model/Timetable';
 import { Course } from '../model/Course';
 import mongoose from 'mongoose';
+import { request } from 'http';
 
 export const getCourseList = async (req: Request, res: Response) => {
     try {
@@ -84,5 +85,54 @@ export const deleteCourse = async(req: Request, res: Response) => {
     }catch(err){
         console.error('deleteCourse error', err);
         res.status(500).json({ message: 'Server Error: deleteCourse'});
+    }
+}
+
+
+
+export const getCourseDetail = async(req: Request, res: Response) =>{
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ message: '未授權: 缺少 userId' });
+
+    const courseId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+        return res.status(400).json({ message: 'Invalid course id' });
+    }
+    
+    try{
+        const course = await Course.findOne({_id: courseId, userId});
+        if(!course) return res.status(400).json({ message: '找不到 Course'});
+
+        const timetable = await TimetableData.findOne({ userId });
+        
+        if (!timetable) {
+            return res.status(200).json({
+                ...course.toObject(),
+                schedule: [],
+            });
+        }
+
+        const schedule: { day: string; time: string }[] = [];
+        timetable.rows.forEach((row, rowIndex) =>{
+            row.classes.forEach((classItem, colIndex)=>{
+                if(classItem.courseId?.toString() === courseId){
+                    const day = timetable.columns[colIndex];
+                    schedule.push({
+                        day,
+                        time: row.time,
+                    });
+                }
+            });
+        });
+
+        return res.json({
+            ...course.toObject(),
+            schedule,
+        });
+
+    }catch(err){
+         console.error('取得課程詳細錯誤:', err);
+        return res.status(500).json({ error: '伺服器錯誤' });
     }
 }

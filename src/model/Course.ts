@@ -6,10 +6,6 @@ export interface ICourse extends Document {
     color?: string;                 // 顏色顯示用
     attendanceCount: number;       // 點名次數
     notificationsEnabled: boolean; // 是否啟用點名通知
-    schedule?: {
-        day: string;                 // 週一、週二...
-        time: string;                // "08:00 - 09:00"
-    }[];
 }
 
 const CourseSchema = new Schema<ICourse>({
@@ -18,15 +14,6 @@ const CourseSchema = new Schema<ICourse>({
     color: { type: String },
     attendanceCount: { type: Number, default: 0 },
     notificationsEnabled: { type: Boolean, default: false },
-    schedule: {
-        type: [
-        {
-            day: { type: String, required: true },
-            time: { type: String, required: true }
-        }
-        ],
-        default: []
-    }
 });
 
 export const Course = model<ICourse>('Course', CourseSchema);
