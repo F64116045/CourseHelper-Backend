@@ -4,6 +4,7 @@ dotenv.config();
 import connectDB from './config/db'
 import authRoutes from './routes/auth.routes'
 import timetableRoutes from './routes/timetable.routes'
+import attendanceRouter from './routes/attendance.route';
 import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -24,6 +25,8 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 
 app.use('/api/timetable', timetableRoutes);
+
+app.use('/api/attendance', attendanceRouter);
 
 const startServer = async () => {
   try {
