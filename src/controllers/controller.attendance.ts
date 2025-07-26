@@ -44,7 +44,6 @@ export const markAttendance = async (req: Request, res: Response) => {
 };
 
 
-
 export const getAttendanceHistory = async (req: Request, res: Response) => {
 	try {
 		const userId = req.user._id;
