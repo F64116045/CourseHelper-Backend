@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 
 export const markAttendance = async (req: Request, res: Response) => {
 	try {
-		const userId = req.user._id; 
+		const userId = req.user?.userId;
 		const { courseId, status = 'present', date } = req.body;
 
 		if (!courseId || !['present', 'absent'].includes(status)) {
@@ -46,9 +46,8 @@ export const markAttendance = async (req: Request, res: Response) => {
 
 export const getAttendanceHistory = async (req: Request, res: Response) => {
 	try {
-		const userId = req.user._id;
+		const userId = req.user?.userId;
 		const { courseId, from, to } = req.query;
-
 		if (!courseId || typeof courseId !== 'string') {
 			return res.status(422).json({ error: '缺少 courseId' });
 		}
@@ -56,13 +55,14 @@ export const getAttendanceHistory = async (req: Request, res: Response) => {
 		const course = await Course.findById(courseId);
 
 		if (!course) {
+			console.log('課程不存在');
 			return res.status(404).json({ error: '課程不存在' });
 		}
 
 		if (!course.userId.equals(userId)) {
+			console.log('無權限操作');
 			return res.status(403).json({ error: '無權限操作' });
 		}
-
 
 		const query: any = { courseId };
 

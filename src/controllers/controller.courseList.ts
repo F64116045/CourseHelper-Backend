@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import { TimetableData, IClassItem, ITimetableData} from '../model/Timetable';
 import { Course } from '../model/Course';
 import mongoose from 'mongoose';
+import { Attendance } from '../model/Attendance';
 import { request } from 'http';
 
 export const getCourseList = async (req: Request, res: Response) => {
@@ -47,46 +48,69 @@ export const createCourse = async (req: Request, res: Response) => {
 
 
 
-export const deleteCourse = async(req: Request, res: Response) => {
+export const deleteCourse = async (req: Request, res: Response) => {
     const userId = req.user?.userId;
     if (!userId) return res.status(401).json({ message: '未授權: 缺少 userId' });
 
     const courseId = req.params.id;
-
     if (!mongoose.Types.ObjectId.isValid(courseId)) {
         return res.status(400).json({ message: 'Invalid course id' });
     }
 
-    try{
-        const course = await Course.findOne({_id:courseId, userId});
-        if(!course) return res.status(400).json({ message: '找不到 Course'});
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-        await Course.findOneAndDelete({ _id: courseId, userId });
+    try {
 
-        const timetable = await TimetableData.findOne({ userId });
-        if(!timetable) return res.status(400).json({ message: '找不到 Timetable'});
+        const course = await Course.findOne({ _id: courseId, userId }).session(session);
+
+        if (!course) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(404).json({ message: '找不到 Course' });
+        }
+
+        // 刪除點名紀錄
+        await Attendance.deleteMany({ courseId }).session(session);
+
+        // 刪除課程
+        await Course.deleteOne({ _id: courseId, userId }).session(session);
+
+        // 更新 timetable，移除被刪除課程的 courseId
+        const timetable = await TimetableData.findOne({ userId }).session(session);
+        if (!timetable) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(404).json({ message: '找不到 Timetable' });
+        }
 
         let updated = false;
 
         for (const row of timetable.rows) {
             for (const cls of row.classes) {
                 if (cls.courseId?.toString() === courseId) {
-                    cls.courseId = undefined;
-                    updated = true;
+                cls.courseId = undefined;
+                updated = true;
                 }
             }
         }
 
-        if(updated){
-            await timetable.save();
+        if (updated) {
+            await timetable.save({ session });
         }
 
-        res.status(200).json({message: '刪除成功'});
-    }catch(err){
+        await session.commitTransaction();
+        session.endSession();
+
+        return res.status(200).json({ message: '刪除成功' });
+        
+    } catch (err) {
+        await session.abortTransaction();
+        session.endSession();
         console.error('deleteCourse error', err);
-        res.status(500).json({ message: 'Server Error: deleteCourse'});
+        return res.status(500).json({ message: 'Server Error: deleteCourse' });
     }
-}
+};
 
 
 
