@@ -33,7 +33,7 @@ export const markAttendance = async (req: Request, res: Response) => {
 
 		const attendance = new Attendance({
 			courseId: new mongoose.Types.ObjectId(courseId),
-			date: today,
+			date: markDate,
 			status,
 		});
 
