@@ -22,7 +22,14 @@ export const markAttendance = async (req: Request, res: Response) => {
 			return res.status(403).json({ error: '無權限操作' });
 		}
 
-		const today = date || new Date().toISOString().slice(0, 10); // yyyy-mm-dd
+		const markDate = date || new Date().toISOString().slice(0, 10); // yyyy-mm-dd
+		const today = new Date();
+		const markDateObj = new Date(markDate);
+		
+		// 防止補登未來日期
+		if (markDateObj > today) {
+			return res.status(422).json({ error: '不能補登未來日期' });
+		}
 
 		const attendance = new Attendance({
 			courseId: new mongoose.Types.ObjectId(courseId),
