@@ -24,7 +24,7 @@ export const createCourse = async (req: Request, res: Response) => {
         const userId = req.user?.userId;
         if (!userId) return res.status(401).json({ message: '未授權: 缺少 userId' });
 
-        const { name, color, schedule, notificationsEnabled } = req.body;
+        const { name, color, credit, notificationsEnabled } = req.body;
 
         if (!name) return res.status(400).json({ message: '課程名稱是必填欄位' });
 
@@ -32,9 +32,8 @@ export const createCourse = async (req: Request, res: Response) => {
             userId,
             name,
             color,
-            schedule,
+            credit,
             notificationsEnabled: notificationsEnabled ?? false,
-            attendanceCount: 0,
         });
 
         await newCourse.save();
@@ -103,7 +102,7 @@ export const deleteCourse = async (req: Request, res: Response) => {
         session.endSession();
 
         return res.status(200).json({ message: '刪除成功' });
-        
+
     } catch (err) {
         await session.abortTransaction();
         session.endSession();
