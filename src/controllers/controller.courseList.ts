@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import { TimetableData, IClassItem, ITimetableData} from '../model/Timetable';
-import { Course } from '../model/Course';
+import { Course, CourseType } from '../model/Course';
 import mongoose from 'mongoose';
 import { Attendance } from '../model/Attendance';
 import { request } from 'http';
@@ -24,9 +24,13 @@ export const createCourse = async (req: Request, res: Response) => {
         const userId = req.user?.userId;
         if (!userId) return res.status(401).json({ message: '未授權: 缺少 userId' });
 
-        const { name, color, credit, notificationsEnabled } = req.body;
+        const { name, color, credit, notificationsEnabled, type } = req.body;
 
         if (!name) return res.status(400).json({ message: '課程名稱是必填欄位' });
+
+        if (!type || !Object.values(CourseType).includes(type)) {
+            return res.status(400).json({ message: '課程種類必須是必修、選修或通識之一' });
+        }
 
         const newCourse = new Course({
             userId,
@@ -34,6 +38,7 @@ export const createCourse = async (req: Request, res: Response) => {
             color,
             credit,
             notificationsEnabled: notificationsEnabled ?? false,
+            type,
         });
 
         await newCourse.save();

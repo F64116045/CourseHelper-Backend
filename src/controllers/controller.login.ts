@@ -23,11 +23,14 @@ export const loginUser = async(req: Request, res: Response)=>{
 
         const user = await User.findOne({email});
 
-        if(!user) return res.status(400).json({message : 'Email錯誤'});
+        if(!user){
+            return res.status(400).json({message : 'Email錯誤'});
+        }
 
+        
         const isMatch = await bcrypt.compare(password, user.password);
         if(!isMatch) return res.status(400).json({message : '密碼錯誤'});
-
+        
         const token = jwt.sign({userId: user._id}, JWT_SECRET, {expiresIn:'1h'});
         const refreshToken = jwt.sign({userId: user._id}, REFRESH_SECRET, {expiresIn:'7d'});
 
@@ -43,6 +46,6 @@ export const loginUser = async(req: Request, res: Response)=>{
         return res.status(200).json({ token: token , name: user.name, email: user.email});
     }catch(err){
         console.log(err);
-        res.status(500).json({message: 'Server : 未知錯誤'});
+        return res.status(500).json({message: 'Server : 未知錯誤'});
     }
 }
