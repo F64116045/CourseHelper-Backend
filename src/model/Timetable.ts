@@ -35,7 +35,6 @@ const TimetableRowsSchema = new Schema<ITimetableRows>({
     classes: { type: [ClassItemSchema], required: true },
 });
 
-const TimetableRows = mongoose.model<ITimetableRows>('TimetableRows', TimetableRowsSchema);
 
 export interface ITimetableData extends Document{
     userId: Types.ObjectId;

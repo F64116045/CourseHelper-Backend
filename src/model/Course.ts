@@ -23,7 +23,7 @@ const CourseSchema = new Schema<ICourse>({
     notificationsEnabled: { type: Boolean, default: false },
     type: {
         type: String,
-        enum: Object.values(CourseType), // 限定為 enum 中的值
+        enum: Object.values(CourseType),
         required: true,
     },
 });
