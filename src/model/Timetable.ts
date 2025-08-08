@@ -38,13 +38,15 @@ const TimetableRowsSchema = new Schema<ITimetableRows>({
 
 export interface ITimetableData extends Document{
     userId: Types.ObjectId;
+    semesterId: Types.ObjectId;
     columns: string[];
     rows: ITimetableRows[];
 };
 
 const TimetableDataSchema: Schema = new Schema<ITimetableData>({
     userId: {type: Schema.Types.ObjectId, ref: 'User', required: true},
-
+    semesterId: { type: Schema.Types.ObjectId, ref: 'Semester', required: true },
+    
     columns:{
         type:[String],
         required:true,

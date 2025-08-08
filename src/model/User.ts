@@ -1,10 +1,11 @@
-import mongoose, {Schema, Document} from 'mongoose';
+import mongoose, {Types, Schema, Document} from 'mongoose';
 
 export interface IUser extends Document{
     name: string;
     email: string;
     password: string;
     createdAt: Date;
+    currentSemesterId?: Types.ObjectId; // optional
 }
 
 const UserSchema: Schema = new Schema<IUser>({
@@ -33,7 +34,10 @@ const UserSchema: Schema = new Schema<IUser>({
         default: Date.now,
     },
 
-
+    currentSemesterId: { 
+        type: Schema.Types.ObjectId, 
+        ref: 'Semester',
+    },
 })
 
 const User = mongoose.model<IUser>('User', UserSchema);

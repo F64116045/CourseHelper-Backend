@@ -13,6 +13,7 @@ export interface ICourse extends Document {
     credit: number;
     notificationsEnabled: boolean;
     type: CourseType;
+    semesterId: Types.ObjectId;
 }
 
 const CourseSchema = new Schema<ICourse>({
@@ -25,6 +26,10 @@ const CourseSchema = new Schema<ICourse>({
         type: String,
         enum: Object.values(CourseType),
         required: true,
+    },
+    semesterId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Semester', required: true
     },
 });
 
