@@ -5,7 +5,7 @@ export interface ISemester extends Document {
   name: string;                       // 如「112-1」、「Fall 2025」
   startDate?: Date;
   endDate?: Date;
-  isArchived: boolean;               // 是否已結束（可切換顯示）
+  isArchived?: boolean;               // 是否已結束（可切換顯示）
 }
 
 const SemesterSchema = new Schema<ISemester>({
@@ -17,3 +17,4 @@ const SemesterSchema = new Schema<ISemester>({
 });
 
 export const Semester = mongoose.model<ISemester>('Semester', SemesterSchema);
+SemesterSchema.index({ userId: 1, name: 1 }, { unique: true });
