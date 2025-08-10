@@ -7,4 +7,5 @@ const router = Router();
 router.post('/', authMiddleware, createSemesterHandler);
 router.get('/', authMiddleware, getSemestersHandler);
 
+
 export default router;

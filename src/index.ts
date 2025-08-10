@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.routes'
 import timetableRoutes from './routes/timetable.routes'
 import attendanceRouter from './routes/attendance.route';
 import semesterRouter from './routes/semester.routes';
+import userRouter from './routes/user.route';
 import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -30,6 +31,8 @@ app.use('/api/timetable', timetableRoutes);
 app.use('/api/attendance', attendanceRouter);
 
 app.use('/api/semesters', semesterRouter);
+
+app.use('/api/user', userRouter);
 
 const startServer = async () => {
   try {

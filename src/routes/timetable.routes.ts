@@ -8,9 +8,17 @@ router.get('/', authMiddleware, getTimetable);
 router.put('/', authMiddleware, updateTimetable);
 
 //CourseList
+
+// GET /course-list?semesterId=xxx
 router.get('/course-list', authMiddleware, getCourseList);
+
+// POST /course-list   （body 需帶 { ..., semesterId }）
 router.post('/course-list', authMiddleware, createCourse);
+
+// DELETE /course-list/:id?semesterId=xxx
 router.delete('/course-list/:id', authMiddleware, deleteCourse);
+
+// GET /course-list/:id?semesterId=xxx
 router.get('/course-list/:id', authMiddleware, getCourseDetail);
 
 export default router;
