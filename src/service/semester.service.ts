@@ -6,19 +6,19 @@ interface CreateSemesterInput{
     name: string;
 }
 
-export async function createSemester(input: CreateSemesterInput){
+export async function createSemester(input: CreateSemesterInput) {
     const session = await mongoose.startSession();
 
-    try{
+    try {
         session.startTransaction();
-        const semester = await Semester.create(
-            { userId: input.userId, name: input.name, isArchived: false },
+        const semesterDocs = await Semester.create(
+            [{ userId: input.userId, name: input.name, isArchived: false }],
             { session }
         );
 
         await session.commitTransaction();
-        return semester;
-    }catch(err: any){
+        return semesterDocs[0];
+    } catch (err: any) {
         await session.abortTransaction();
         if (err?.code === 11000) {
             const e = new Error('Semester with the same name already exists for this user.');
@@ -26,7 +26,12 @@ export async function createSemester(input: CreateSemesterInput){
             throw e;
         }
         throw err;
-    }finally {
+    } finally {
         session.endSession();
     }
+}
+
+
+export async function listSemesters(userId: string) {
+    return Semester.find({ userId }).sort({ name: 1 }).lean();
 }
