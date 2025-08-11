@@ -41,3 +41,18 @@ export async function getSemestersHandler(req: Request, res: Response) {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+
+
+export async function deleteSemesterCascadeHandler(req: Request, res: Response) {
+    const userId = req.user!.userId;
+    const { id } = req.params;
+
+    try {
+        const result = await semesterService.deleteSemesterCascade(userId, id);
+        return res.status(200).json(result);
+    } catch (e: any) {
+        const status = Number(e?.status) || 500;
+        const message = typeof e?.message === 'string' ? e.message : 'Internal Server Error';
+        return res.status(status).json({ error: message });
+    }
+}

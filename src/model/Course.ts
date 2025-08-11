@@ -32,5 +32,5 @@ const CourseSchema = new Schema<ICourse>({
         ref: 'Semester', required: true
     },
 });
-
+CourseSchema.index({ userId: 1, semesterId: 1 });
 export const Course = model<ICourse>('Course', CourseSchema);
