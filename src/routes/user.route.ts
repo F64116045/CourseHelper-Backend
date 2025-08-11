@@ -4,5 +4,5 @@ import { setCurrentSemester, getCurrentSemesterHandler } from '../controllers/us
 
 const router = Router();
 router.patch('/me/current-semester', authMiddleware, setCurrentSemester);
-router.get('me/current-semester', authMiddleware, getCurrentSemesterHandler);
+router.get('/me/current-semester', authMiddleware, getCurrentSemesterHandler);
 export default router;
