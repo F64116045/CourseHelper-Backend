@@ -25,3 +25,10 @@ export const setCurrentSemester = async (req: Request, res: Response) => {
         return res.status(500).json({ message: 'Server Error: setCurrentSemester' });
     }
 };
+
+
+export async function getCurrentSemesterHandler(req: Request, res: Response) {
+    const userId = req.user!.userId;
+    const { semesterId } = await UserService.getCurrentSemester(userId);
+    return res.json({ semesterId });
+}
