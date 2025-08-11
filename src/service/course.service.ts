@@ -34,6 +34,13 @@ export async function deleteCourse(userId: string, courseId: string, semesterId:
     const session = await mongoose.startSession();
     try {
         await session.withTransaction(async () => {
+            console.log('deleteCourse args', { userId, courseId, semesterId });
+            console.log('types', {
+                userIdType: typeof userId,
+                courseIdType: typeof courseId,
+                semesterIdType: typeof semesterId,
+            });
+            
             const course = await Course.findOne({ _id: courseId, userId, semesterId }).session(session);
             if (!course) {
                 throw new Error('找不到 Course');

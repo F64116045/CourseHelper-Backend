@@ -4,9 +4,6 @@ import {getTimetable, updateTimetable } from '../controllers/controller.timetabl
 import { getCourseList ,createCourse, deleteCourse, getCourseDetail} from '../controllers/controller.courseList';
 
 const router = express.Router();
-router.get('/', authMiddleware, getTimetable);
-router.put('/', authMiddleware, updateTimetable);
-
 //CourseList
 
 // GET /course-list?semesterId=xxx
