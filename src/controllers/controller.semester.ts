@@ -45,10 +45,10 @@ export async function getSemestersHandler(req: Request, res: Response) {
 
 export async function deleteSemesterCascadeHandler(req: Request, res: Response) {
     const userId = req.user!.userId;
-    const { id } = req.params;
+    const { semesterId } = req.params;
 
     try {
-        const result = await semesterService.deleteSemesterCascade(userId, id);
+        const result = await semesterService.deleteSemesterCascade(userId, semesterId);
         return res.status(200).json(result);
     } catch (e: any) {
         const status = Number(e?.status) || 500;
